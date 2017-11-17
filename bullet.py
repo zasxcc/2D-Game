@@ -28,4 +28,7 @@ class Bullet:
         if(self.life):
             self.image1.clip_draw(0, 0, 20, 30, self.x, self.y)
 
+    def get_bb(self):
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+
 
