@@ -31,4 +31,7 @@ class Bullet:
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
 
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
+
 

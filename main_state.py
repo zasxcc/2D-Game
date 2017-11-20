@@ -5,9 +5,10 @@ from pico2d import *
 import title_state
 import random
 from background import Background
-from player import Player # import player class from player.py
+from player import Player
 from mob import BigMob
 from grass import Grass
+from grass import Grass2
 from bullet import Bullet
 
 bull1 = 0
@@ -20,6 +21,7 @@ count3 = 0
 speed = 1
 name = "MainState"
 grass = None
+grass2 = None
 font = None
 background = None
 player = None
@@ -28,13 +30,14 @@ big_mobs = None
 
 
 def create_world():
-    global player, grass, mobs, big_mobs,background,bullet,bullets
+    global player, grass, mobs, big_mobs,background,bullet,bullets, grass2
 
     player = Player()
     grass = Grass()
     bullet = Bullet()
     bullets = [Bullet() for i in range(10)]
     grass = Grass()
+    grass2 = Grass2()
     background = Background()
     big_mobs = [BigMob() for i in range(410)]
 
@@ -43,18 +46,18 @@ def create_world():
 
 
 def destroy_world():
-    global player, mobs, grass,background,bullet,bullets,font
+    global player, mobs, grass,background,bullet,bullets,font, grass2
     del(bullet)
     del(bullets)
     del(player)
     del(mobs)
     del(background)
     del(grass)
+    del(grass2)
     del(font)
 
 
 def enter():
-    #open_canvas()
     global font
     font = load_font('ENCR10B.TTF')
     game_framework.reset_time()
@@ -62,8 +65,6 @@ def enter():
 
 
 def exit():
-    #destroy_world()
-    #close_canvas()
     pass
 
 
@@ -102,6 +103,18 @@ def handle_events(frame_time):
             else:
                 player.handle_event(event)
 
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
+
+
 
 def update(frame_time):
     global Life,B,kill,speed,delay_time,bull1
@@ -110,6 +123,74 @@ def update(frame_time):
     if(delay_time>13):
         for mob in mobs:
             mob.update(frame_time*speed)
+
+    for mob in mobs:
+        if collide(player, mob):
+            mobs.remove(mob)
+            kill = 0
+            Life = 10
+            speed = 1
+            delay_time = 0
+            game_framework.change_state(title_state)
+            break;
+
+        if collide(grass, mob):
+            mobs.remove(mob)
+            Life = (Life - 1)
+            print(Life)
+            if (Life % 10 == 0):
+                kill = 0
+                Life = 10
+                speed = 1
+                delay_time = 0
+                game_framework.change_state(titlle_state)
+                break;
+
+
+    for mob in mobs:
+        if collide(player, mob):
+            mobs.remove(mob)
+            kill = 0
+            Life = 10
+            speed = 1
+            delay_time =0
+            game_framework.change_state(title_state)
+            break;
+
+
+        if collide(grass2,mob):
+            mobs.remove(mob)
+            Life=(Life-1)
+            print(Life)
+            if(Life%10==0):
+                kill = 0
+                Life = 10
+                speed = 1
+                delay_time =0
+                game_framework.change_state(title_state)
+                break;
+
+
+    for bul in bullets:
+        for mob in mobs:
+            if collide(bul, mob):
+                if(kill<400):
+                    if bul.life == True:
+                        mobs.remove(mob)
+                        kill = (kill+1)
+                        print(kill)
+                        bull1 = (bull1+1)
+                        if(bull1==1):
+                            bull1=0
+                            bul.life = False
+                elif(kill>=400):
+                    delay_time =0
+                    kill=0
+                    Life = (Life+20)
+                    speed = 1
+                    game_framework.change_state(title_state)
+
+
 
     for obj in bullets:
         obj.update(frame_time*speed)
@@ -136,8 +217,8 @@ def draw(frame_time):
             mob.draw()
 
     grass.draw()
+    grass2.draw()
     player.draw()
-    #player.draw_bb()
 
     update_canvas()
 
