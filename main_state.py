@@ -118,9 +118,9 @@ def update(frame_time):
     global Life,B,kill,speed,delay_time,bull1
 
     background.update(frame_time)
-    if(delay_time>13):
-        for mob in mobs:
-            mob.update(frame_time*speed)
+
+    for mob in mobs:
+        mob.update(frame_time*speed)
 
     for mob in mobs:
         if collide(player, mob):
@@ -210,9 +210,9 @@ def draw(frame_time):
             bul.draw()
 
 
-    if(delay_time>14):
-        for mob in mobs:
-            mob.draw()
+
+    for mob in mobs:
+        mob.draw()
 
     grass.draw()
     grass2.draw()
