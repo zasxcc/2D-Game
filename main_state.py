@@ -141,7 +141,7 @@ def update(frame_time):
                 Life = 10
                 speed = 1
                 delay_time = 0
-                game_framework.change_state(titlle_state)
+                game_framework.change_state(title_state)
                 break;
 
 
