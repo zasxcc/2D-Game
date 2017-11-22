@@ -195,7 +195,7 @@ def update(frame_time):
 
     delay_time = (delay_time+frame_time)
     player.update(frame_time)
-    #delay(0.2)
+    #delay(0.3)
 
 def pause():
     pass
