@@ -16,8 +16,6 @@ delay_time =0
 kill = 0
 Life = 10
 count = 0
-count2 = 0
-count3 = 0
 speed = 1
 name = "MainState"
 grass = None
@@ -77,7 +75,7 @@ def resume():
 
 
 def handle_events(frame_time):
-    global x, y, count,count2,count3
+    global x, y, count
     global Life,B,kill,speed,delay_time
     events = get_events()
     for event in events:
