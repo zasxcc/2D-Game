@@ -210,9 +210,9 @@ def draw(frame_time):
             bul.draw()
 
 
-    if(delay_time>14):
-        for mob in mobs:
-            mob.draw()
+   
+    for mob in mobs:
+        mob.draw()
 
     grass.draw()
     grass2.draw()
