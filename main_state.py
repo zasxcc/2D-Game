@@ -91,12 +91,11 @@ def handle_events(frame_time):
                 game_framework.change_state(title_state)
 
 
-            if event.type == SDL_MOUSEBUTTONDOWN:
-                if (event.button) == (SDL_BUTTON_LEFT):
-                    x,y =player.x,player.y
-                    if(True):
-                        count=(count+1)%10
-                        bullets[count].activate(player)
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_a):
+                x,y =player.x,player.y
+                if(True):
+                    count=(count+1)%10
+                    bullets[count].activate(player)
 
             else:
                 player.handle_event(event)
