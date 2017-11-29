@@ -7,6 +7,7 @@ import random
 from background import Background
 from player import Player
 from mob import BigMob
+from mob import BigMob2
 from grass import Grass
 from grass import Grass2
 from bullet import Bullet
@@ -15,7 +16,7 @@ from bullet import Bullet2
 bull1 = 0
 bull2 = 0
 delay_time =0
-kill = 0
+kill = 1
 Life = 10
 count = 0
 speed = 1
@@ -26,11 +27,13 @@ font = None
 background = None
 player = None
 mobs = None
+mobs2 = None
 big_mobs = None
+big_mobs2 = None
 
 
 def create_world():
-    global player, grass, mobs, big_mobs,background,bullet,bullets,bullet2, bullets2, grass2
+    global player, grass, mobs,mobs2, big_mobs,big_mobs2, background,bullet,bullets,bullet2, bullets2, grass2
 
     player = Player()
     grass = Grass()
@@ -41,20 +44,28 @@ def create_world():
     grass = Grass()
     grass2 = Grass2()
     background = Background()
-    big_mobs = [BigMob() for i in range(410)]
+    if (kill < 200):
+        big_mobs = [BigMob() for i in range(410)]
+    elif (kill >= 200):
+        big_mobs2 = [BigMob2() for i in range(510)]
 
     mobs = [Mob() for i in range(0)]
     mobs = big_mobs + mobs
 
+    mobs2 = [Mob2() for i in range(0)]
+    mobs2 = mobs2
+
+
 
 def destroy_world():
-    global player, mobs, grass,background,bullet,bullets,bullet2, bullets2, font,grass2
+    global player, mobs,mobs2, grass,background,bullet,bullets,bullet2, bullets2, font,grass2
     del(bullet)
     del(bullet2)
     del(bullets)
     del(bullets2)
     del(player)
     del(mobs)
+    del(mobs2)
     del(background)
     del(grass)
     del(grass2)
@@ -124,11 +135,15 @@ def collide(a, b):
 
 def update(frame_time):
     global Life,B,kill,speed,delay_time,bull1, bull2
-
     background.update(frame_time)
 
-    for mob in mobs:
-        mob.update(frame_time*speed)
+    if (kill > 0):
+        for mob in mobs:
+            mob.update(frame_time*speed)
+
+    if ( kill >= 200):
+        for mob2 in mobs2:
+            mob2.update(frame_time*speed)
 
     for mob in mobs:
         if collide(player, mob):
@@ -138,7 +153,7 @@ def update(frame_time):
             speed = 1
             delay_time = 0
             game_framework.change_state(title_state)
-            break;
+            break
 
         if collide(grass, mob):
             mobs.remove(mob)
@@ -150,7 +165,7 @@ def update(frame_time):
                 speed = 1
                 delay_time = 0
                 game_framework.change_state(titlle_state)
-                break;
+                break
 
 
     for mob in mobs:
@@ -161,8 +176,7 @@ def update(frame_time):
             speed = 1
             delay_time =0
             game_framework.change_state(title_state)
-            break;
-
+            break
 
         if collide(grass2,mob):
             mobs.remove(mob)
@@ -174,7 +188,31 @@ def update(frame_time):
                 speed = 1
                 delay_time =0
                 game_framework.change_state(title_state)
-                break;
+                break
+
+
+    for mob2 in mobs2:
+        if collide(player, mob2):
+            mobs2.remove(mob2)
+            record_score()
+            kill = 0
+            Life = 10
+            speed = 1
+            delay_time =0
+            game_framework.change_state(title_state)
+            break
+
+        if collide(grass,mob2):
+            mobs2.remove(mob2)
+            Life=(Life-1)
+            print(Life)
+            if(Life%10==0):
+                kill = 0
+                Life = 10
+                speed = 1
+                delay_time =0
+                game_framework.change_state(title_state)
+                break
 
 
     for bul in bullets:
@@ -189,18 +227,27 @@ def update(frame_time):
                         if(bull1==1):
                             bull1=0
                             bul.life = False
-                elif(kill>=400):
-                    delay_time =0
-                    kill=0
-                    Life = (Life+20)
-                    speed = 1
-                    game_framework.change_state(title_state)
+
+
+    for bul in bullets:
+        for mob2 in mobs2:
+            if collide(bul, mob2):
+                if(kill<500):
+                    if bul.life == True:
+                        mobs2.remove(mob2)
+                        kill = (kill+1)
+                        print(kill)
+                        bull1 = (bull1+1)
+                        if(bull1==1):
+                            bull1=0
+                            bul.life = False
+
 
 
     for bul2 in bullets2:
         for mob in mobs:
             if collide(bul2, mob):
-                if(kill<400):
+                if(kill>0):
                     if bul2.life == True:
                         mobs.remove(mob)
                         kill = (kill+1)
@@ -209,12 +256,22 @@ def update(frame_time):
                         if(bull2==2):
                             bull2=0
                             bul2.life = False
-                elif(kill>=400):
-                    delay_time =0
-                    kill=0
-                    Life = (Life+20)
-                    speed = 1
-                    game_framework.change_state(title_state)
+
+
+    for bul2 in bullets2:
+        for mob2 in mobs2:
+            if collide(bul2, mob2):
+                if(kill>0):
+                    if bul2.life == True:
+                        mobs2.remove(mob2)
+                        kill = (kill+1)
+                        print(kill)
+                        bull2 = (bull2+1)
+                        if(bull2==2):
+                            bull2=0
+                            bul2.life = False
+
+
 
     if (kill < 100):
         for obj in bullets:
@@ -244,10 +301,11 @@ def draw(frame_time):
             if bul2.life==True:
                 bul2.draw()
 
-
-
     for mob in mobs:
         mob.draw()
+
+    for mob2 in mobs2:
+        mob2.draw()
 
     grass.draw()
     grass2.draw()
