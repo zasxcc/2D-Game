@@ -3,8 +3,10 @@ import os
 import game_framework
 from pico2d import *
 import title_state
+import title_state2
 import random
 from background import Background
+from background import Background2
 from player import Player
 from mob import BigMob
 from mob import BigMob2
@@ -20,11 +22,13 @@ kill = 1
 Life = 10
 count = 0
 speed = 1
+stage = 1
 name = "MainState"
 grass = None
 grass2 = None
 font = None
 background = None
+background2 = None
 player = None
 mobs = None
 mobs2 = None
@@ -33,7 +37,7 @@ big_mobs2 = None
 
 
 def create_world():
-    global player, grass, mobs,mobs2, big_mobs,big_mobs2, background,bullet,bullets,bullet2, bullets2, grass2
+    global player, grass,stage, mobs,mobs2, big_mobs,big_mobs2, background,background2, bullet,bullets,bullet2, bullets2, grass2
 
     player = Player()
     grass = Grass()
@@ -44,16 +48,30 @@ def create_world():
     grass = Grass()
     grass2 = Grass2()
     background = Background()
-    if (kill < 200):
+
+    if (stage == 1):
+        grass2 = Grass2()
+        grass = Grass()
+        background = Background()
+        background2 = False
         big_mobs = [BigMob() for i in range(410)]
-    elif (kill >= 200):
+        big_mobs2 = [BigMob2() for i in range(0)]
+
+
+    if (stage == 2):
+        grass2 = Grass2()
+        grass = Grass()
+        background = False
+        background2 = Background2()
+        big_mobs = [BigMob() for i in range(0)]
         big_mobs2 = [BigMob2() for i in range(510)]
+
 
     mobs = [Mob() for i in range(0)]
     mobs = big_mobs + mobs
 
     mobs2 = [Mob2() for i in range(0)]
-    mobs2 = mobs2
+    mobs2 = big_mobs2 + mobs2
 
 
 
@@ -134,16 +152,20 @@ def collide(a, b):
 
 
 def update(frame_time):
-    global Life,B,kill,speed,delay_time,bull1, bull2
-    background.update(frame_time)
+    global Life,B,kill,speed,delay_time,bull1, bull2, stage
 
-    if (kill > 0):
+
+    if (stage == 1):
+        background.update(frame_time)
+
         for mob in mobs:
-            mob.update(frame_time*speed)
+            mob.update(frame_time * speed)
 
-    if ( kill >= 200):
+    elif (stage == 2):
+        background2.update(frame_time)
+
         for mob2 in mobs2:
-            mob2.update(frame_time*speed)
+            mob2.update(frame_time * speed)
 
     for mob in mobs:
         if collide(player, mob):
@@ -151,6 +173,7 @@ def update(frame_time):
             kill = 0
             Life = 10
             speed = 1
+            stage = 1
             delay_time = 0
             game_framework.change_state(title_state)
             break
@@ -163,6 +186,7 @@ def update(frame_time):
                 kill = 0
                 Life = 10
                 speed = 1
+                stage = 1
                 delay_time = 0
                 game_framework.change_state(titlle_state)
                 break
@@ -174,6 +198,7 @@ def update(frame_time):
             kill = 0
             Life = 10
             speed = 1
+            stage=1
             delay_time =0
             game_framework.change_state(title_state)
             break
@@ -186,6 +211,7 @@ def update(frame_time):
                 kill = 0
                 Life = 10
                 speed = 1
+                stage = 1
                 delay_time =0
                 game_framework.change_state(title_state)
                 break
@@ -198,6 +224,7 @@ def update(frame_time):
             kill = 0
             Life = 10
             speed = 1
+            stage = 1
             delay_time =0
             game_framework.change_state(title_state)
             break
@@ -210,6 +237,7 @@ def update(frame_time):
                 kill = 0
                 Life = 10
                 speed = 1
+                stage = 1
                 delay_time =0
                 game_framework.change_state(title_state)
                 break
@@ -227,12 +255,17 @@ def update(frame_time):
                         if(bull1==1):
                             bull1=0
                             bul.life = False
-
+                elif (kill >= 400):
+                    delay_time = 0
+                    kill = 0
+                    speed = 1
+                    stage = 2
+                    game_framework.change_state(title_state2)
 
     for bul in bullets:
         for mob2 in mobs2:
             if collide(bul, mob2):
-                if(kill<500):
+                if(kill<400):
                     if bul.life == True:
                         mobs2.remove(mob2)
                         kill = (kill+1)
@@ -241,6 +274,12 @@ def update(frame_time):
                         if(bull1==1):
                             bull1=0
                             bul.life = False
+                elif (kill >= 400):
+                    delay_time = 0
+                    kill = 0
+                    speed = 1
+                    stage = 2
+                    game_framework.change_state(title_state2)
 
 
 
@@ -256,6 +295,12 @@ def update(frame_time):
                         if(bull2==2):
                             bull2=0
                             bul2.life = False
+                elif (kill >= 400):
+                    delay_time = 0
+                    kill = 0
+                    speed = 1
+                    stage = 2
+                    game_framework.change_state(title_state2)
 
 
     for bul2 in bullets2:
@@ -270,6 +315,12 @@ def update(frame_time):
                         if(bull2==2):
                             bull2=0
                             bul2.life = False
+            elif (kill >= 400):
+                delay_time = 0
+                kill = 0
+                speed = 1
+                stage = 2
+                game_framework.change_state(title_state2)
 
 
 
@@ -290,7 +341,10 @@ def pause():
 def draw(frame_time):
     clear_canvas()
 
-    background.draw()
+    if(stage==1):
+        background.draw()
+    elif(stage==2):
+        background2.draw()
 
     if(kill<100):
         for bul in bullets:

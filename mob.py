@@ -31,7 +31,7 @@ class BigMob2:
         self.fall_speed = random.randint(200,300)
         if BigMob2.image == 0:
             BigMob2.image = load_image('enemyShip.png')
-
+        self.parent = None
 
     def stop(self):
         self.fall_speed = 0
