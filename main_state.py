@@ -140,13 +140,16 @@ def handle_events(frame_time):
                 delay_time =0
                 game_framework.change_state(title_state)
 
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_t):
+                score = (score+10000)
+
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_a):
                 x,y =player.x,player.y
-                if(score < 10000):
+                if(score < 20000):
                     count=(count+1)%10
                     bullets[count].activate(player)
-                if(score>=10000):
+                if(score>=20000):
                     count = (count + 1) % 10
                     bullets2[count].activate(player)
 
@@ -230,6 +233,7 @@ def update(frame_time):
             Life=(Life-1)
             print(Life)
             if(Life%10==0):
+                record_score()
                 kill = 0
                 Life = 10
                 speed = 1
@@ -272,7 +276,7 @@ def update(frame_time):
     for bul in bullets:
         for mob in mobs:
             if collide(bul, mob):
-                if(kill<400):
+                if(kill<200):
                     if bul.life == True:
                         mobs.remove(mob)
                         kill = (kill+1)
@@ -282,7 +286,7 @@ def update(frame_time):
                         if(bull1==1):
                             bull1=0
                             bul.life = False
-                elif (kill >= 400):
+                elif (kill >= 200):
                     delay_time = 0
                     kill = 0
                     speed = 1
@@ -293,7 +297,7 @@ def update(frame_time):
     for bul in bullets:
         for mob2 in mobs2:
             if collide(bul, mob2):
-                if(kill<400):
+                if(kill<300):
                     if bul.life == True:
                         mobs2.remove(mob2)
                         kill = (kill+1)
@@ -303,29 +307,29 @@ def update(frame_time):
                         if(bull1==1):
                             bull1=0
                             bul.life = False
-                elif (kill >= 400):
+                elif (kill >= 300):
                     delay_time = 0
                     kill = 0
                     speed = 1
                     stage = 2
                     record_score()
-                    game_framework.change_state(title_state2)
+                    #game_framework.change_state(title_state2)
 
 
 
     for bul2 in bullets2:
         for mob in mobs:
             if collide(bul2, mob):
-                if(kill>0):
+                if(kill < 200):
                     if bul2.life == True:
                         mobs.remove(mob)
-                        score = (score + 100)
+                        kill = (kill + 1)
                         print(kill)
                         bull2 = (bull2+1)
                         if(bull2==2):
                             bull2=0
                             bul2.life = False
-                elif (kill >= 400):
+                elif (kill >= 200):
                     delay_time = 0
                     kill = 0
                     speed = 1
@@ -337,29 +341,29 @@ def update(frame_time):
     for bul2 in bullets2:
         for mob2 in mobs2:
             if collide(bul2, mob2):
-                if(kill>0):
+                if(kill < 300):
                     if bul2.life == True:
                         mobs2.remove(mob2)
-                        score = (score+200)
+                        score = (score+300)
                         print(kill)
                         bull2 = (bull2+1)
                         if(bull2==2):
                             bull2=0
                             bul2.life = False
-            elif (kill >= 400):
+            elif (kill >= 200):
                 delay_time = 0
                 kill = 0
                 speed = 1
                 stage = 2
                 record_score()
-                game_framework.change_state(title_state2)
+                #game_framework.change_state(title_state2)
 
 
 
-    if (score < 10000):
+    if (score < 20000):
         for obj in bullets:
             obj.update(frame_time * speed)
-    if (10000 <= score):
+    if (20000 <= score):
         for obj in bullets2:
             obj.update(frame_time * speed)
 
@@ -378,11 +382,11 @@ def draw(frame_time):
     elif(stage==2):
         background2.draw()
 
-    if(score<10000):
+    if(score<20000):
         for bul in bullets:
             if bul.life==True:
                 bul.draw()
-    if(10000<=score):
+    if(20000<=score):
         for bul2 in bullets2:
             if bul2.life==True:
                 bul2.draw()
