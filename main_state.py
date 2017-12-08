@@ -5,6 +5,7 @@ from pico2d import *
 import title_state
 import title_state2
 import random
+import ranking_state
 from background import Background
 from background import Background2
 from player import Player
@@ -14,6 +15,7 @@ from grass import Grass
 from grass import Grass2
 from bullet import Bullet
 from bullet import Bullet2
+
 
 bull1 = 0
 bull2 = 0
@@ -98,6 +100,18 @@ def enter():
     create_world()
 
 
+def record_score():
+    #read previous data
+    with open('score.txt', 'r') as f:
+        score_list = json.load(f)
+
+    # add new score
+    score_list.append([score,kill,Life])
+    #write all the scores
+    with open('score.txt', 'w') as f:
+       json.dump(score_list , f)
+
+
 def exit():
     pass
 
@@ -170,6 +184,7 @@ def update(frame_time):
 
     for mob in mobs:
         if collide(player, mob):
+            record_score()
             mobs.remove(mob)
             kill = 0
             Life = 10
@@ -177,7 +192,7 @@ def update(frame_time):
             stage = 1
             score= 0
             delay_time = 0
-            game_framework.change_state(title_state)
+            game_framework.change_state(ranking_state)
             break
 
         if collide(grass, mob):
@@ -185,18 +200,20 @@ def update(frame_time):
             Life = (Life - 1)
             print(Life)
             if (Life % 10 == 0):
+                record_score()
                 kill = 0
                 Life = 10
                 score = 0
                 speed = 1
                 stage = 1
                 delay_time = 0
-                game_framework.change_state(titlle_state)
+                game_framework.change_state(ranking_state)
                 break
 
 
     for mob in mobs:
         if collide(player, mob):
+            record_score()
             mobs.remove(mob)
             kill = 0
             Life = 10
@@ -204,10 +221,11 @@ def update(frame_time):
             stage=1
             score = 0
             delay_time =0
-            game_framework.change_state(title_state)
+            game_framework.change_state(ranking_state)
             break
 
         if collide(grass2,mob):
+            record_score()
             mobs.remove(mob)
             Life=(Life-1)
             print(Life)
@@ -218,7 +236,7 @@ def update(frame_time):
                 score = 0
                 stage = 1
                 delay_time =0
-                game_framework.change_state(title_state)
+                game_framework.change_state(ranking_state)
                 break
 
 
@@ -232,7 +250,7 @@ def update(frame_time):
             stage = 1
             score = 0
             delay_time =0
-            game_framework.change_state(title_state)
+            game_framework.change_state(ranking_state)
             break
 
         if collide(grass,mob2):
@@ -240,13 +258,14 @@ def update(frame_time):
             Life=(Life-1)
             print(Life)
             if(Life%10==0):
+                record_score()
                 kill = 0
                 Life = 10
                 speed = 1
                 score = 0
                 stage = 1
                 delay_time =0
-                game_framework.change_state(title_state)
+                game_framework.change_state(ranking_state)
                 break
 
 
@@ -268,6 +287,7 @@ def update(frame_time):
                     kill = 0
                     speed = 1
                     stage = 2
+                    record_score()
                     game_framework.change_state(title_state2)
 
     for bul in bullets:
@@ -288,6 +308,7 @@ def update(frame_time):
                     kill = 0
                     speed = 1
                     stage = 2
+                    record_score()
                     game_framework.change_state(title_state2)
 
 
@@ -309,6 +330,7 @@ def update(frame_time):
                     kill = 0
                     speed = 1
                     stage = 2
+                    record_score()
                     game_framework.change_state(title_state2)
 
 
@@ -329,6 +351,7 @@ def update(frame_time):
                 kill = 0
                 speed = 1
                 stage = 2
+                record_score()
                 game_framework.change_state(title_state2)
 
 
