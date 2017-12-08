@@ -34,10 +34,11 @@ mobs = None
 mobs2 = None
 big_mobs = None
 big_mobs2 = None
+score = 0
 
 
 def create_world():
-    global player, grass,stage, mobs,mobs2, big_mobs,big_mobs2, background,background2, bullet,bullets,bullet2, bullets2, grass2
+    global player, grass,stage, mobs,mobs2, big_mobs,big_mobs2, background,background2, bullet,bullets,bullet2, bullets2, grass2, score
 
     player = Player()
     grass = Grass()
@@ -111,7 +112,7 @@ def resume():
 
 def handle_events(frame_time):
     global x, y, count
-    global Life,B,kill,speed,delay_time
+    global Life,B,kill,speed,delay_time, score
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -128,10 +129,10 @@ def handle_events(frame_time):
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_a):
                 x,y =player.x,player.y
-                if(kill < 100):
+                if(score < 10000):
                     count=(count+1)%10
                     bullets[count].activate(player)
-                if(kill>=100):
+                if(score>=10000):
                     count = (count + 1) % 10
                     bullets2[count].activate(player)
 
@@ -152,7 +153,7 @@ def collide(a, b):
 
 
 def update(frame_time):
-    global Life,B,kill,speed,delay_time,bull1, bull2, stage
+    global Life,B,kill,speed,delay_time,bull1, bull2, stage,score
 
 
     if (stage == 1):
@@ -174,6 +175,7 @@ def update(frame_time):
             Life = 10
             speed = 1
             stage = 1
+            score= 0
             delay_time = 0
             game_framework.change_state(title_state)
             break
@@ -185,6 +187,7 @@ def update(frame_time):
             if (Life % 10 == 0):
                 kill = 0
                 Life = 10
+                score = 0
                 speed = 1
                 stage = 1
                 delay_time = 0
@@ -199,6 +202,7 @@ def update(frame_time):
             Life = 10
             speed = 1
             stage=1
+            score = 0
             delay_time =0
             game_framework.change_state(title_state)
             break
@@ -211,6 +215,7 @@ def update(frame_time):
                 kill = 0
                 Life = 10
                 speed = 1
+                score = 0
                 stage = 1
                 delay_time =0
                 game_framework.change_state(title_state)
@@ -225,6 +230,7 @@ def update(frame_time):
             Life = 10
             speed = 1
             stage = 1
+            score = 0
             delay_time =0
             game_framework.change_state(title_state)
             break
@@ -237,6 +243,7 @@ def update(frame_time):
                 kill = 0
                 Life = 10
                 speed = 1
+                score = 0
                 stage = 1
                 delay_time =0
                 game_framework.change_state(title_state)
@@ -251,6 +258,7 @@ def update(frame_time):
                         mobs.remove(mob)
                         kill = (kill+1)
                         print(kill)
+                        score = (score+100)
                         bull1 = (bull1+1)
                         if(bull1==1):
                             bull1=0
@@ -269,6 +277,7 @@ def update(frame_time):
                     if bul.life == True:
                         mobs2.remove(mob2)
                         kill = (kill+1)
+                        score = (score+200)
                         print(kill)
                         bull1 = (bull1+1)
                         if(bull1==1):
@@ -289,7 +298,7 @@ def update(frame_time):
                 if(kill>0):
                     if bul2.life == True:
                         mobs.remove(mob)
-                        kill = (kill+1)
+                        score = (score + 100)
                         print(kill)
                         bull2 = (bull2+1)
                         if(bull2==2):
@@ -309,7 +318,7 @@ def update(frame_time):
                 if(kill>0):
                     if bul2.life == True:
                         mobs2.remove(mob2)
-                        kill = (kill+1)
+                        score = (score+200)
                         print(kill)
                         bull2 = (bull2+1)
                         if(bull2==2):
@@ -324,10 +333,10 @@ def update(frame_time):
 
 
 
-    if (kill < 100):
+    if (score < 10000):
         for obj in bullets:
             obj.update(frame_time * speed)
-    if (100 <= kill):
+    if (10000 <= score):
         for obj in bullets2:
             obj.update(frame_time * speed)
 
@@ -346,11 +355,11 @@ def draw(frame_time):
     elif(stage==2):
         background2.draw()
 
-    if(kill<100):
+    if(score<10000):
         for bul in bullets:
             if bul.life==True:
                 bul.draw()
-    if(100<=kill):
+    if(10000<=score):
         for bul2 in bullets2:
             if bul2.life==True:
                 bul2.draw()
@@ -365,7 +374,8 @@ def draw(frame_time):
     grass2.draw()
     player.draw()
 
-    font.draw(600, 50, "kill = %d" %kill, (255,255,255))
+
+    font.draw(600, 50, "score = %d" %score, (255,255,255))
     font.draw(600, 70, "Life = %d" %Life, (255,255,255))
 
     update_canvas()
