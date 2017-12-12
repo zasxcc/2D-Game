@@ -282,6 +282,7 @@ def update(frame_time):
                         kill = (kill+1)
                         print(kill)
                         score = (score+100)
+                        bullet.eat(mob)
                         bull1 = (bull1+1)
                         if(bull1==1):
                             bull1=0
@@ -302,6 +303,7 @@ def update(frame_time):
                         mobs2.remove(mob2)
                         kill = (kill+1)
                         score = (score+200)
+                        bullet.eat(mob2)
                         print(kill)
                         bull1 = (bull1+1)
                         if(bull1==1):
@@ -325,6 +327,7 @@ def update(frame_time):
                         mobs.remove(mob)
                         kill = (kill + 1)
                         print(kill)
+                        bullet2.eat(mob)
                         bull2 = (bull2+1)
                         if(bull2==2):
                             bull2=0
@@ -346,6 +349,7 @@ def update(frame_time):
                         mobs2.remove(mob2)
                         score = (score+300)
                         print(kill)
+                        bullet2.eat(mob2)
                         bull2 = (bull2+1)
                         if(bull2==2):
                             bull2=0
