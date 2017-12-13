@@ -15,13 +15,14 @@ from grass import Grass
 from grass import Grass2
 from bullet import Bullet
 from bullet import Bullet2
-
+from boss import BigMob4
 
 bull1 = 0
 bull2 = 0
 delay_time =0
 kill = 1
 Life = 10
+bosslife = 500
 count = 0
 speed = 1
 stage = 1
@@ -40,7 +41,7 @@ score = 0
 
 
 def create_world():
-    global player, grass,stage, mobs,mobs2, big_mobs,big_mobs2, background,background2, bullet,bullets,bullet2, bullets2, grass2, score
+    global player, grass,stage, mobs,mobs2, mobs4, big_mobs,big_mobs2,big_mobs4, background,background2, bullet,bullets,bullet2, bullets2, grass2, score
 
     player = Player()
     grass = Grass()
@@ -59,6 +60,7 @@ def create_world():
         background2 = False
         big_mobs = [BigMob() for i in range(410)]
         big_mobs2 = [BigMob2() for i in range(0)]
+        big_mobs4 = [BigMob4() for i in range(1)]
 
 
     if (stage == 2):
@@ -67,7 +69,8 @@ def create_world():
         background = False
         background2 = Background2()
         big_mobs = [BigMob() for i in range(0)]
-        big_mobs2 = [BigMob2() for i in range(510)]
+        big_mobs2 = [BigMob2() for i in range(810)]
+        big_mobs4 = [BigMob4() for i in range(1)]
 
 
     mobs = [Mob() for i in range(0)]
@@ -76,7 +79,8 @@ def create_world():
     mobs2 = [Mob2() for i in range(0)]
     mobs2 = big_mobs2 + mobs2
 
-
+    mobs4 = [Mob4() for i in range(0)]
+    mobs4 = big_mobs4 + mobs4
 
 def destroy_world():
     global player, mobs,mobs2, grass,background,bullet,bullets,bullet2, bullets2, font,grass2
@@ -87,7 +91,9 @@ def destroy_world():
     del(player)
     del(mobs)
     del(mobs2)
+    del(mobs4)
     del(background)
+    del(background2)
     del(grass)
     del(grass2)
     del(font)
@@ -170,7 +176,7 @@ def collide(a, b):
 
 
 def update(frame_time):
-    global Life,B,kill,speed,delay_time,bull1, bull2, stage,score
+    global Life,B,kill,speed,delay_time,bull1, bull2, stage,score, bosslife
 
 
     if (stage == 1):
@@ -184,6 +190,9 @@ def update(frame_time):
 
         for mob2 in mobs2:
             mob2.update(frame_time * speed)
+
+        for mob4 in mobs4:
+            mob4.update(frame_time*speed)
 
     for mob in mobs:
         if collide(player, mob):
@@ -207,6 +216,7 @@ def update(frame_time):
                 kill = 0
                 Life = 10
                 score = 0
+                bosslife = 300
                 speed = 1
                 stage = 1
                 delay_time = 0
@@ -267,10 +277,25 @@ def update(frame_time):
                 Life = 10
                 speed = 1
                 score = 0
+                bosslife = 300
                 stage = 1
                 delay_time =0
                 game_framework.change_state(ranking_state)
                 break
+
+    for mob4 in mobs4:
+        if collide(player, mob4):
+            mobs4.remove(mob4)
+            record_score()
+            kill = 0
+            score = 0
+            Life = 10
+            bosslife = 300
+            speed = 1
+            delay_time =0
+            stage=1
+            game_framework.change_state(ranking_state)
+            break
 
 
     for bul in bullets:
@@ -315,7 +340,22 @@ def update(frame_time):
                     speed = 1
                     stage = 2
                     record_score()
-                    #game_framework.change_state(title_state2)
+
+
+
+    for bul in bullets:
+        for mob4 in mobs4:
+            if collide(bul, mob4):
+                if(bosslife>0):
+                    if bul.life == True:
+                        bosslife = (bosslife-1)
+                        bullet.eat(mob4)
+                        bul.life = False
+                elif(bosslife==0):
+                    mobs4.remove(mob4)
+                    score =(score+10000)
+                    Life = (Life+10)
+
 
 
 
@@ -360,7 +400,20 @@ def update(frame_time):
                 speed = 1
                 stage = 2
                 record_score()
-                #game_framework.change_state(title_state2)
+
+
+    for bul2 in bullets2:
+        for mob4 in mobs4:
+            if collide(bul2, mob4):
+                if (bosslife > 0):
+                    if bul2.life == True:
+                        bosslife = (bosslife - 1)
+                        bullet2.eat(mob4)
+                        bul2.life = False
+                elif (bosslife == 0):
+                    mobs4.remove(mob4)
+                    score = (score + 10000)
+                    Life = (Life + 10)
 
 
 
@@ -400,6 +453,9 @@ def draw(frame_time):
 
     for mob2 in mobs2:
         mob2.draw()
+
+    for mob4 in mobs4:
+        mob4.draw()
 
     grass.draw()
     grass2.draw()
