@@ -11,7 +11,7 @@ font1 =None
 
 def enter():
     global image,font1
-    image = load_image('title1.png')
+    image = load_image('title2.png')
     font1 = load_font('ENCR10B.TTF',30)
 
 def exit():

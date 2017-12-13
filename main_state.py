@@ -69,7 +69,7 @@ def create_world():
         background = False
         background2 = Background2()
         big_mobs = [BigMob() for i in range(0)]
-        big_mobs2 = [BigMob2() for i in range(810)]
+        big_mobs2 = [BigMob2() for i in range(610)]
         big_mobs4 = [BigMob4() for i in range(1)]
 
 
@@ -453,9 +453,9 @@ def draw(frame_time):
 
     for mob2 in mobs2:
         mob2.draw()
-
-    for mob4 in mobs4:
-        mob4.draw()
+    if (stage == 2):
+        for mob4 in mobs4:
+            mob4.draw()
 
     grass.draw()
     grass2.draw()

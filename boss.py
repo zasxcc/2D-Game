@@ -8,7 +8,7 @@ class BigMob4:
         self.x, self.y = 400, 500
         self.frame = 0
         self.speed = 100  # 200 pixel per second
-        self.speed2 = 0  # 200 pixel per second
+        self.speed2 = 10  # 200 pixel per second
 
     def update(self, frame_time):
         self.x += frame_time * self.speed * 2
@@ -33,9 +33,7 @@ class BigMob4:
         return self.x - 100, self.y - 50, self.x + 100, self.y + 50
 
     def draw(self):
-        num = 1
-        if (num):
-            self.image.clip_draw(self.frame * 200, 0, 200, 150, self.x, self.y)
+        self.image.draw(self.x, self.y)
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
