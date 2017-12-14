@@ -69,7 +69,7 @@ def create_world():
         background = False
         background2 = Background2()
         big_mobs = [BigMob() for i in range(0)]
-        big_mobs2 = [BigMob2() for i in range(610)]
+        big_mobs2 = [BigMob2() for i in range(800)]
         big_mobs4 = [BigMob4() for i in range(1)]
 
 
@@ -151,6 +151,15 @@ def handle_events(frame_time):
 
 
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_a):
+                x,y =player.x,player.y
+                if(score < 20000):
+                    count=(count+1)%10
+                    bullets[count].activate(player)
+                if(score>=20000):
+                    count = (count + 1) % 10
+                    bullets2[count].activate(player)
+
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_s):
                 x,y =player.x,player.y
                 if(score < 20000):
                     count=(count+1)%10
