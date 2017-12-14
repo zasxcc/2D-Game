@@ -3,10 +3,16 @@ import random
 from pico2d import *
 
 class Grass:
+    eat_sound = None
 
     def __init__(self):
         self.image = load_image('grass.png')
-
+        self.bgm = load_music('Earthy_Crust.mp3')
+        self.bgm.set_volume(60)
+        self.bgm.repeat_play()
+        if Grass.eat_sound == None:
+            Grass.eat_sound = load_wav('warning.wav')
+            Grass.eat_sound.set_volume(32)
 
     def draw(self):
         self.image.draw(400, -20)
@@ -20,12 +26,23 @@ class Grass:
 
     def __del__(self):
         del self.image
+        del self.bgm
+
+    def eat(self, ball):
+        self.eat_sound.play()
 
 
 class Grass2:
+    eat_sound = None
 
     def __init__(self):
         self.image = load_image('grass.png')
+        self.bgm = load_music('Earthy_Crust.mp3')
+        self.bgm.set_volume(60)
+        self.bgm.repeat_play()
+        if Grass.eat_sound == None:
+            Grass.eat_sound = load_wav('warning.wav')
+            Grass.eat_sound.set_volume(32)
 
 
     def draw(self):
@@ -40,6 +57,10 @@ class Grass2:
 
     def __del__(self):
         del self.image
+        del self.bgm
+
+    def eat(self, ball):
+        self.eat_sound.play()
 
 
 
